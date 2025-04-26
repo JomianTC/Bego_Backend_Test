@@ -3,12 +3,14 @@ import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
 import { envs } from './config';
 import { TrucksModule } from './trucks/trucks.module';
+import { LocationsModule } from './locations/locations.module';
 
 @Module({
 	imports: [
 		UserModule,
 		MongooseModule.forRoot(envs.mongoUrl),
-		TrucksModule
+		TrucksModule,
+		LocationsModule
 	],
 	controllers: [],
 	providers: [],
