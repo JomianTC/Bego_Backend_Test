@@ -78,11 +78,17 @@ export class OrdersController {
 
 		if (!user && !truck && !pickup && !dropoff) return;
 
+		let userFound: string = '';
+		let truckFound: string = '';
+
 		if (user)
-			await this.userService.findOne(user);
+			userFound = (await this.userService.findOne(user)).email;
 
 		if (truck)
-			await this.trucksSservice.findOne(truck);
+			truckFound = (await this.trucksSservice.findOne(truck)).user.email;
+
+		if (user !== '' && truck !== '' && userFound !== truckFound)
+			throw new BadRequestException({ message: 'Truck does not belong to the User' });
 
 		if (pickup)
 			await this.LocationsService.findOne(pickup);
