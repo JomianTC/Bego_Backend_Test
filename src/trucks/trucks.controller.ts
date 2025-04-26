@@ -1,20 +1,23 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { ParseMongoIdPipe, AuthGuard } from '../common';
 import { CreateTruckDto } from './dto/create-truck.dto';
 import { UpdateTruckDto } from './dto/update-truck.dto';
+import { UserService } from '../user/user.service';
 import { TrucksService } from './trucks.service';
-import { ParseMongoIdPipe, AuthGuard } from '../common';
 
 @Controller('trucks')
 export class TrucksController {
 
 	constructor(
 		private readonly trucksService: TrucksService,
+		private readonly userService: UserService,
 	) { }
 
 	@Post()
 	@UseGuards(AuthGuard)
 	async create(@Body() createTruckDto: CreateTruckDto) {
-		return this.trucksService.create(createTruckDto);
+		await this.userService.findOne(createTruckDto.user);
+		return await this.trucksService.create(createTruckDto);
 	}
 
 	@Get('findAll')
@@ -31,14 +34,16 @@ export class TrucksController {
 
 	@Get('findAll/user/:id')
 	@UseGuards(AuthGuard)
-	findAllUserTrucks(@Param('id', ParseMongoIdPipe) id: string) {
-		return this.trucksService.findAllByUser(id);
+	async findAllUserTrucks(@Param('id', ParseMongoIdPipe) id: string) {
+		await this.userService.findOne(id);
+		return await this.trucksService.findAllByUser(id);
 	}
 
 	@Patch('update/:id')
 	@UseGuards(AuthGuard)
-	update(@Param('id', ParseMongoIdPipe) id: string, @Body() updateTruckDto: UpdateTruckDto) {
-		return this.trucksService.update(id, updateTruckDto);
+	async update(@Param('id', ParseMongoIdPipe) id: string, @Body() updateTruckDto: UpdateTruckDto) {
+		await this.userService.findOne(id);
+		return await this.trucksService.update(id, updateTruckDto);
 	}
 
 	@Delete('delete/:id')
