@@ -1,8 +1,13 @@
+import { MongooseModule } from '@nestjs/mongoose';
 import { Module } from '@nestjs/common';
 import { UserModule } from './user/user.module';
+import { envs } from './config';
 
 @Module({
-	imports: [UserModule],
+	imports: [
+		UserModule,
+		MongooseModule.forRoot(envs.mongoUrl)
+	],
 	controllers: [],
 	providers: [],
 })

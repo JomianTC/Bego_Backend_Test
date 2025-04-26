@@ -1,34 +1,51 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { LoginUserDto } from './dto/login-user.dto';
+import { ParseMongoIdPipe } from 'src/common';
+import { AuthGuard } from './guards/validate-token.guard';
 
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.userService.create(createUserDto);
-  }
+	constructor(private readonly userService: UserService) { }
 
-  @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
+	// Auth endpoints
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
+	@Post('register')
+	registerUser(@Body() registerUserDto: RegisterUserDto) {
+		return this.userService.registerUser(registerUserDto);
+	}
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
-  }
+	@Post('login')
+	loginUser(@Body() loginUserDto: LoginUserDto) {
+		return this.userService.loginUser(loginUserDto);
+	}
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
-  }
+	// CRUD User endpoints
+
+	@Get('findAll')
+	@UseGuards(AuthGuard)
+	findAll() {
+		return this.userService.findAll();
+	}
+
+	@Get('findOne/:id')
+	@UseGuards(AuthGuard)
+	findOne(@Param('id', ParseMongoIdPipe) id: string) {
+		return this.userService.findOne(id);
+	}
+
+	@Patch('update/:id')
+	@UseGuards(AuthGuard)
+	update(@Param('id', ParseMongoIdPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
+		return this.userService.update(id, updateUserDto);
+	}
+
+	@Delete('delete/:id')
+	@UseGuards(AuthGuard)
+	remove(@Param('id', ParseMongoIdPipe) id: string) {
+		return this.userService.remove(id);
+	}
 }
