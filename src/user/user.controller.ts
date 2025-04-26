@@ -3,8 +3,7 @@ import { UserService } from './user.service';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { ParseMongoIdPipe } from 'src/common';
-import { AuthGuard } from './guards/validate-token.guard';
+import { AuthGuard, ParseMongoIdPipe } from '../common';
 
 @Controller('user')
 export class UserController {
