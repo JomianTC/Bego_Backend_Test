@@ -1,34 +1,40 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { PlaceLocationDto } from './dto/place-location.dto';
 import { LocationsService } from './locations.service';
-import { CreateLocationDto } from './dto/create-location.dto';
-import { UpdateLocationDto } from './dto/update-location.dto';
+import { AuthGuard, ParseMongoIdPipe } from '../common';
 
 @Controller('locations')
 export class LocationsController {
+
 	constructor(private readonly locationsService: LocationsService) { }
 
-	@Post()
-	create(@Body() createLocationDto: CreateLocationDto) {
-		return this.locationsService.create(createLocationDto);
+	@Post('create')
+	@UseGuards(AuthGuard)
+	create(@Body() placeLocationDto: PlaceLocationDto) {
+		return this.locationsService.create(placeLocationDto);
 	}
 
-	@Get()
+	@Get('findAll')
+	@UseGuards(AuthGuard)
 	findAll() {
 		return this.locationsService.findAll();
 	}
 
-	@Get(':id')
-	findOne(@Param('id') id: string) {
-		return this.locationsService.findOne(+id);
+	@Get('findOne/:id')
+	@UseGuards(AuthGuard)
+	findOne(@Param('id', ParseMongoIdPipe) id: string) {
+		return this.locationsService.findOne(id);
 	}
 
-	@Patch(':id')
-	update(@Param('id') id: string, @Body() updateLocationDto: UpdateLocationDto) {
-		return this.locationsService.update(+id, updateLocationDto);
+	@Patch('update/:id')
+	@UseGuards(AuthGuard)
+	update(@Param('id', ParseMongoIdPipe) id: string, @Body() placeLocationDto: PlaceLocationDto) {
+		return this.locationsService.update(id, placeLocationDto);
 	}
 
-	@Delete(':id')
-	remove(@Param('id') id: string) {
-		return this.locationsService.remove(+id);
+	@Delete('delete/:id')
+	@UseGuards(AuthGuard)
+	remove(@Param('id', ParseMongoIdPipe) id: string) {
+		return this.locationsService.remove(id);
 	}
 }
