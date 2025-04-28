@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { ParseMongoIdPipe, AuthGuard } from '../common';
+import { AuthGuard } from 'src/user/guards/validate-token.guard';
 import { CreateTruckDto } from './dto/create-truck.dto';
 import { UpdateTruckDto } from './dto/update-truck.dto';
 import { UserService } from '../user/user.service';
 import { TrucksService } from './trucks.service';
+import { ParseMongoIdPipe } from '../common';
 
 @Controller('trucks')
 export class TrucksController {
@@ -13,7 +14,7 @@ export class TrucksController {
 		private readonly userService: UserService,
 	) { }
 
-	@Post()
+	@Post('create')
 	@UseGuards(AuthGuard)
 	async create(@Body() createTruckDto: CreateTruckDto) {
 		await this.userService.findOne(createTruckDto.user);
@@ -42,7 +43,10 @@ export class TrucksController {
 	@Patch('update/:id')
 	@UseGuards(AuthGuard)
 	async update(@Param('id', ParseMongoIdPipe) id: string, @Body() updateTruckDto: UpdateTruckDto) {
-		await this.userService.findOne(id);
+		
+		if(updateTruckDto.user)
+			await this.userService.findOne(updateTruckDto.user);
+	
 		return await this.trucksService.update(id, updateTruckDto);
 	}
 

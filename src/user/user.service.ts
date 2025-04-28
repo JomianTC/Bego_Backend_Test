@@ -58,7 +58,7 @@ export class UserService {
 
 			return {
 				message: 'Login successful',
-				token: await this.signJwt(email)
+				token: await this.signJwt(userFound.id)
 			};
 
 		} catch (error) { throw handleErrors(error); }

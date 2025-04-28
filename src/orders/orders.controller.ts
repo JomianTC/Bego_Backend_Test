@@ -1,14 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, BadRequestException } from '@nestjs/common';
+import { AuthGuard } from 'src/user/guards/validate-token.guard';
+import { LocationsService } from '../locations/locations.service';
+import { TrucksService } from 'src/trucks/trucks.service';
 import { ChangeStatusDto } from './dto/change-status.dto';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
-import { AuthGuard, ParseMongoIdPipe } from '../common';
-import { OrdersService } from './orders.service';
 import { UserService } from 'src/user/user.service';
-import { TrucksService } from 'src/trucks/trucks.service';
-import { LocationsService } from '../locations/locations.service';
-import { Truck } from 'src/trucks/entities/truck.entity';
-import { User } from 'src/user/entities/user.entity';
+import { OrdersService } from './orders.service';
+import { ParseMongoIdPipe } from '../common';
 
 @Controller('orders')
 export class OrdersController {
