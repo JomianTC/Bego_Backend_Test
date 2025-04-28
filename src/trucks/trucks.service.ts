@@ -52,8 +52,11 @@ export class TrucksService {
 
 		try {
 
-			const truck = await this.truckModel.findById(id)
-				.select('-__v').populate('user', 'email -_id').exec();
+			const truck = await this.truckModel
+				.findById(id)
+				.select('-__v')
+				.populate<{ user: Pick<User, 'email'> }>('user', 'email -_id')
+				.exec();
 
 			if (!truck) throw new BadRequestException({ message: 'Truck not found' });
 
@@ -87,7 +90,7 @@ export class TrucksService {
 	}
 
 	async update(id: string, updateTruckDto: UpdateTruckDto) {
-		
+
 		const { plates } = updateTruckDto;
 
 		try {
@@ -116,7 +119,7 @@ export class TrucksService {
 			await this.findOne(id);
 			await this.truckModel.findByIdAndDelete(id);
 
-			return { message: 'Truck deleted successfully' };			
+			return { message: 'Truck deleted successfully' };
 
 		} catch (error) { throw handleErrors(error); }
 	}
