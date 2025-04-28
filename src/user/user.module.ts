@@ -17,6 +17,5 @@ import { envs } from 'src/config';
 	],
 	controllers: [UserController],
 	providers: [UserService],
-	exports: [MongooseModule],
 })
 export class UserModule { }
