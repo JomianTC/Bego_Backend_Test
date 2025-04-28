@@ -1,7 +1,8 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
+import { AuthGuard } from 'src/user/guards/validate-token.guard';
 import { PlaceLocationDto } from './dto/place-location.dto';
 import { LocationsService } from './locations.service';
-import { AuthGuard, ParseMongoIdPipe } from '../common';
+import { ParseMongoIdPipe } from '../common';
 
 @Controller('locations')
 export class LocationsController {
