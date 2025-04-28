@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
-import { ParseMongoIdPipe, AuthGuard } from '../common';
+import { AuthGuard } from 'src/user/guards/validate-token.guard';
 import { CreateTruckDto } from './dto/create-truck.dto';
 import { UpdateTruckDto } from './dto/update-truck.dto';
 import { UserService } from '../user/user.service';
 import { TrucksService } from './trucks.service';
+import { ParseMongoIdPipe } from '../common';
 
 @Controller('trucks')
 export class TrucksController {
