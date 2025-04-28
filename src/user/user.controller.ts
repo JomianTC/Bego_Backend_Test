@@ -1,9 +1,10 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
+import { AuthGuard } from './guards/validate-token.guard';
 import { RegisterUserDto } from './dto/register-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { LoginUserDto } from './dto/login-user.dto';
-import { AuthGuard, ParseMongoIdPipe } from '../common';
+import { ParseMongoIdPipe } from '../common';
 
 @Controller('user')
 export class UserController {
