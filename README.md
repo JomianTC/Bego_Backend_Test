@@ -32,6 +32,19 @@ Variables para el uso de endpoints de Postman:
 ## Realización de la API
 Para desarrollar la siguiente API tuve muy en cuenta los requisitos listados en las instrucciones ademas de ir mas allá agregando validaciones que pueden ayudar a mejorar la funcionalidad de la API sin sobrecomplicar la prueba mas allá de lo especificado. 
 
+### NOTA
+Desarrolle este sistema de tal manera que en las peticiones se reciban todos los parámetros necesarios para la creación de un usuario, camion, ubicación y orden, pensando en un sistema donde un usuario creado es como un administrador, que puede crear recursos para otros usuarios, por ejemplo crear un camion donde otro usuario sea el dueño.
+
+A pesar de esto se implementaron validaciones para tener cierto sentido sobre los datos, por ejemplo cuando se crea una orden, en esta petición ademas de la ubicación de recogida y entrega, se espera el id de un camion asi como el id de un usuario, pues para que esta petición sea valida el camion debió haber sido creado por el usuario que agregamos en la petición.
+
+En un entorno diferente, el usuario al que le pertenece el token que usamos en las peticiones unicamente seria capas de modificar recursos creados por el mismo. aun que esta solución presenta problemas al momento de eliminar un usuario, pues en el caso de un hard delete, los recursos creados por el usuario tendrían que se eliminados generando perdida de información, o estarían en la base de datos sin poder ser modificados por nadie desde la API.
+
+En el caso de un soft delete, de igual manera los recursos creados seguirían presentes pero de sin poder modificarse dentro de la API.
+
+En resumen este prueba técnica se desarrollo con la idea de un administrador para hacer mas fácil su uso en el momento de la evaluación, por esta misma razón se crearon endpoints findAll para recuperar todos los registros y poder modificarlos a placer,
+
+Con esto en mente, opte por demostrar mis habilidades técnicas en el desarrollo de la API usando NestJS y MongoDB, en lugar de enfocarme en la lógica de negocio que se podría implementar en un sistema real, ya que esto podría llevar a hacer mas complejo la evaluación el código.
+
 ### Configuración general
 
 Para configurar el proyecto se realizaron implementaciones para la validación de variables de entorno mediante [JOI](https://www.npmjs.com/package/joi), indicando que variables de entorno se necesitan asi como las características de cada una de ellas.
@@ -50,7 +63,7 @@ Para realizar este dominio tuve en cuenta las buenas practicas al momento de des
 - Validación de correo de usuario (no duplicados).
 - Hash de contraseña para mejorar la seguridad de la aplicación mediante Bcryptjs.
 - Creación de token para autorización en endpoints.
-- No retorno de datos sensibles o innecesarios como el password o __v.
+- No retorno de datos sensibles o innecesarios como el password o __v. 
 
 ### Trucks Domain
 De igual manera se tomaron en cuenta los requisitos ademas de implementar validaciones al momento de crear un nuevo camion como:
